@@ -116,6 +116,24 @@ ol {
   color: var(--muted);
 }
 
+.editable-section-content {
+  margin-top: 12px;
+}
+
+.section-edit-button {
+  padding: 8px 16px;
+  border: 1px solid var(--link);
+  background: var(--link);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.inline-section-editor {
+  margin-top: 16px;
+}
+
 .note-editor {
   margin: 18px 0 20px;
   padding: 16px;

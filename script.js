@@ -82,6 +82,9 @@ const noteForm = document.getElementById("note-form");
 const noteFormMessage = document.getElementById("note-form-message");
 const noteDateInput = document.getElementById("note-date");
 const cancelEditButton = document.getElementById("cancel-edit-button");
+const sectionEditButtons = document.querySelectorAll(".section-edit-button");
+const sectionForms = document.querySelectorAll(".section-form");
+const cancelSectionEditButtons = document.querySelectorAll(".cancel-section-edit");
 
 let editingArticleId = null;
 
@@ -125,6 +128,19 @@ function loadOverrides() {
 
 function saveOverrides(overrides) {
   localStorage.setItem(overrideStorageKey, JSON.stringify(overrides));
+}
+
+function loadSectionOverrides() {
+  try {
+    const stored = localStorage.getItem("crawler_blog_section_overrides");
+    return stored ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveSectionOverrides(overrides) {
+  localStorage.setItem("crawler_blog_section_overrides", JSON.stringify(overrides));
 }
 
 function getArticles() {
@@ -316,12 +332,143 @@ function cancelEdit() {
   toggleNoteFormButton.textContent = "添加笔记";
 }
 
+function sectionHtmlToText(element) {
+  const lines = [];
+  element.querySelectorAll("p, li, h3").forEach((node) => {
+    const text = node.textContent.trim();
+    if (!text) {
+      return;
+    }
+    if (node.tagName === "LI") {
+      lines.push(`- ${text}`);
+    } else if (node.tagName === "H3") {
+      lines.push(`## ${text}`);
+    } else {
+      lines.push(text);
+    }
+    lines.push("");
+  });
+  return lines.join("\n").trim();
+}
+
+function textToSectionHtml(text) {
+  const blocks = text
+    .split(/\n{2,}/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+
+  return blocks
+    .map((block) => {
+      const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+      if (lines.every((line) => line.startsWith("- "))) {
+        const items = lines
+          .map((line) => `<li>${escapeHtml(line.slice(2))}</li>`)
+          .join("");
+        return `<ul>${items}</ul>`;
+      }
+      if (lines.length === 1 && lines[0].startsWith("## ")) {
+        return `<h3>${escapeHtml(lines[0].slice(3))}</h3>`;
+      }
+      return lines.map((line) => `<p>${escapeHtml(line)}</p>`).join("");
+    })
+    .join("");
+}
+
+function applySectionOverrides() {
+  const overrides = loadSectionOverrides();
+  Object.entries(overrides).forEach(([sectionId, html]) => {
+    const target = document.getElementById(`${sectionId}-content`);
+    if (target) {
+      target.innerHTML = html;
+    }
+  });
+}
+
+function openSectionEditor(sectionId) {
+  const target = document.getElementById(`${sectionId}-content`);
+  const editor = document.getElementById(`${sectionId}-editor`);
+  const input = document.getElementById(`${sectionId}-content-input`);
+  if (!target) {
+    return;
+  }
+  if (!editor || !input) {
+    return;
+  }
+  editor.classList.remove("is-hidden");
+  const message = editor.querySelector(".section-form-message");
+  if (message) {
+    message.textContent = "正在修改这个区块。";
+  }
+  input.value = sectionHtmlToText(target);
+  input.focus();
+}
+
+function handleSectionSubmit(event) {
+  event.preventDefault();
+  const form = event.currentTarget;
+  const sectionId = form.dataset.sectionId;
+  if (!sectionId) {
+    return;
+  }
+  const input = form.querySelector(".section-content-input");
+  const message = form.querySelector(".section-form-message");
+  const editor = document.getElementById(`${sectionId}-editor`);
+  const text = input.value.trim();
+  if (!text) {
+    if (message) {
+      message.textContent = "请先填写内容。";
+    }
+    return;
+  }
+  const html = textToSectionHtml(text);
+  const target = document.getElementById(`${sectionId}-content`);
+  if (!target) {
+    return;
+  }
+  target.innerHTML = html;
+  const overrides = loadSectionOverrides();
+  overrides[sectionId] = html;
+  saveSectionOverrides(overrides);
+  if (message) {
+    message.textContent = "区块内容已保存到当前浏览器。";
+  }
+  if (editor) {
+    editor.classList.add("is-hidden");
+  }
+}
+
+function cancelSectionEdit(sectionId) {
+  const editor = document.getElementById(`${sectionId}-editor`);
+  if (!editor) {
+    return;
+  }
+  const form = editor.querySelector(".section-form");
+  const message = editor.querySelector(".section-form-message");
+  if (form) {
+    form.reset();
+  }
+  if (message) {
+    message.textContent = "";
+  }
+  editor.classList.add("is-hidden");
+}
+
 noteDateInput.value = new Date().toISOString().slice(0, 10);
+applySectionOverrides();
 renderArticles();
 
 toggleNoteFormButton.addEventListener("click", toggleNoteForm);
 noteForm.addEventListener("submit", handleNoteSubmit);
 cancelEditButton.addEventListener("click", cancelEdit);
+sectionEditButtons.forEach((button) => {
+  button.addEventListener("click", () => openSectionEditor(button.dataset.sectionId));
+});
+sectionForms.forEach((form) => {
+  form.addEventListener("submit", handleSectionSubmit);
+});
+cancelSectionEditButtons.forEach((button) => {
+  button.addEventListener("click", () => cancelSectionEdit(button.dataset.sectionId));
+});
 
 articleGrid.addEventListener("click", (event) => {
   const editButton = event.target.closest(".article-edit-button");

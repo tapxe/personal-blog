@@ -26,17 +26,53 @@
     <main>
       <section id="about" class="section">
         <h2>个人简介</h2>
-        <p>我是谭清梓，本科毕业于嘉应学院计算机科学与技术专业，目前从事爬虫工程相关工作，主要围绕房产站点数据采集、反爬处理、数据清洗和入库展开。</p>
-        <p>这个博客我主要用来整理项目实践、技术总结和问题排查记录。一方面方便自己持续复盘，另一方面也希望能让面试官更直观地看到我当前的技术方向和实际做过的内容。</p>
+        <button type="button" class="section-edit-button" data-section-id="about">修改内容</button>
+        <div id="about-content" class="editable-section-content">
+          <p>我是谭清梓，本科毕业于嘉应学院计算机科学与技术专业，目前从事爬虫工程相关工作，主要围绕房产站点数据采集、反爬处理、数据清洗和入库展开。</p>
+          <p>这个博客我主要用来整理项目实践、技术总结和问题排查记录。一方面方便自己持续复盘，另一方面也希望能让面试官更直观地看到我当前的技术方向和实际做过的内容。</p>
+        </div>
+        <div id="about-editor" class="inline-section-editor note-editor is-hidden">
+          <p class="section-intro"> </p>
+          <form class="section-form note-form" data-section-id="about">
+            <p>
+              <label for="about-content-input">内容</label>
+              <textarea id="about-content-input" class="section-content-input" rows="12" required></textarea>
+            </p>
+            <div class="note-form-actions">
+              <button type="submit">保存内容</button>
+              <button type="button" class="secondary-button cancel-section-edit" data-section-id="about">取消修改</button>
+              <span class="note-form-message section-form-message"></span>
+            </div>
+          </form>
+        </div>
+      </section>
 
-        <h3>核心能力</h3>
-        <ul>
-          <li>Python、Scrapy、Requests、Selenium、Playwright</li>
-          <li>XPath、CSS Selector、正则表达式、JSON 解析</li>
-          <li>JS 逆向、APP 抓包、签名参数和 Cookie / Token 校验排查</li>
-          <li>MySQL、MongoDB、Redis、字段标准化、分类归并和去重</li>
-          <li>日志监控、异常告警、重试、限速和代理调度</li>
-        </ul>
+      <section id="skills" class="section">
+        <h2>核心能力</h2>
+        <button type="button" class="section-edit-button" data-section-id="skills">修改内容</button>
+        <div id="skills-content" class="editable-section-content">
+          <ul>
+            <li>Python、Scrapy、Requests、Selenium、Playwright</li>
+            <li>XPath、CSS Selector、正则表达式、JSON 解析</li>
+            <li>JS 逆向、APP 抓包、签名参数和 Cookie / Token 校验排查</li>
+            <li>MySQL、MongoDB、Redis、字段标准化、分类归并和去重</li>
+            <li>日志监控、异常告警、重试、限速和代理调度</li>
+          </ul>
+        </div>
+        <div id="skills-editor" class="inline-section-editor note-editor is-hidden">
+          <p class="section-intro"> </p>
+          <form class="section-form note-form" data-section-id="skills">
+            <p>
+              <label for="skills-content-input">内容</label>
+              <textarea id="skills-content-input" class="section-content-input" rows="12" required></textarea>
+            </p>
+            <div class="note-form-actions">
+              <button type="submit">保存内容</button>
+              <button type="button" class="secondary-button cancel-section-edit" data-section-id="skills">取消修改</button>
+              <span class="note-form-message section-form-message"></span>
+            </div>
+          </form>
+        </div>
       </section>
 
       <section id="articles" class="section">
@@ -85,34 +121,68 @@
 
       <section id="experience" class="section">
         <h2>项目经历</h2>
-        <ul class="timeline">
-          <li>
-            <strong>2025.03 - 至今</strong><br>
-            在广州房置尊网络科技有限公司从事爬虫工程相关工作，围绕多源房产站点采集、站点结构分析、采集规则编写、数据清洗、分类去重和入库形成完整流程。
-          </li>
-          <li>
-            <strong>房产站点采集项目</strong><br>
-            在实际任务中使用 Python + Scrapy 处理页面抓取和接口抓取，针对动态渲染页面引入 Selenium / Playwright 辅助渲染，并持续优化请求头、Cookie、代理、重试和限速策略，项目运行期间平均每分钟稳定抓取房源 100+ 条。
-          </li>
-          <li>
-            <strong>2021.09 - 2025.06</strong><br>
-            就读于嘉应学院计算机科学与技术专业，系统学习数据结构、操作系统、计算机网络等基础课程。
-          </li>
-          <li>
-            <strong>毕业设计：基于 AI 音乐作曲助手设计与实现</strong><br>
-            完成“基于 AI 音乐作曲助手设计与实现”，使用 PyQt5、hmmlearn、mido、pypianoroll、matplotlib、pygame 等工具实现桌面端界面、旋律生成、可视化展示和播放。
-          </li>
-        </ul>
+        <button type="button" class="section-edit-button" data-section-id="experience">修改内容</button>
+        <div id="experience-content" class="editable-section-content">
+          <ul class="timeline">
+            <li>
+              <strong>2025.03 - 至今</strong><br>
+              在广州房置尊网络科技有限公司从事爬虫工程相关工作，围绕多源房产站点采集、站点结构分析、采集规则编写、数据清洗、分类去重和入库形成完整流程。
+            </li>
+            <li>
+              <strong>房产站点采集项目</strong><br>
+              在实际任务中使用 Python + Scrapy 处理页面抓取和接口抓取，针对动态渲染页面引入 Selenium / Playwright 辅助渲染，并持续优化请求头、Cookie、代理、重试和限速策略，项目运行期间平均每分钟稳定抓取房源 100+ 条。
+            </li>
+            <li>
+              <strong>2021.09 - 2025.06</strong><br>
+              就读于嘉应学院计算机科学与技术专业，系统学习数据结构、操作系统、计算机网络等基础课程。
+            </li>
+            <li>
+              <strong>毕业设计：基于 AI 音乐作曲助手设计与实现</strong><br>
+              完成“基于 AI 音乐作曲助手设计与实现”，使用 PyQt5、hmmlearn、mido、pypianoroll、matplotlib、pygame 等工具实现桌面端界面、旋律生成、可视化展示和播放。
+            </li>
+          </ul>
+        </div>
+        <div id="experience-editor" class="inline-section-editor note-editor is-hidden">
+          <p class="section-intro"> </p>
+          <form class="section-form note-form" data-section-id="experience">
+            <p>
+              <label for="experience-content-input">内容</label>
+              <textarea id="experience-content-input" class="section-content-input" rows="12" required></textarea>
+            </p>
+            <div class="note-form-actions">
+              <button type="submit">保存内容</button>
+              <button type="button" class="secondary-button cancel-section-edit" data-section-id="experience">取消修改</button>
+              <span class="note-form-message section-form-message"></span>
+            </div>
+          </form>
+        </div>
       </section>
 
       <section class="section">
         <h2>工作和学习方法</h2>
-        <ol class="study-list">
-          <li>先通过 Charles、Wireshark 或浏览器工具确认真实请求链路和数据来源。</li>
-          <li>再判断是页面结构变化、接口参数问题、Cookie / Token 失效，还是动态渲染和签名逻辑导致失败。</li>
-          <li>把请求、代码、日志和排查结果对应起来，避免只盯着单点现象。</li>
-          <li>最后把解决方法整理成笔记，方便以后复用和继续补充。</li>
-        </ol>
+        <button type="button" class="section-edit-button" data-section-id="method">修改内容</button>
+        <div id="method-content" class="editable-section-content">
+          <ol class="study-list">
+            <li>先通过 Charles、Wireshark 或浏览器工具确认真实请求链路和数据来源。</li>
+            <li>再判断是页面结构变化、接口参数问题、Cookie / Token 失效，还是动态渲染和签名逻辑导致失败。</li>
+            <li>把请求、代码、日志和排查结果对应起来，避免只盯着单点现象。</li>
+            <li>最后把解决方法整理成笔记，方便以后复用和继续补充。</li>
+          </ol>
+        </div>
+        <div id="method-editor" class="inline-section-editor note-editor is-hidden">
+          <p class="section-intro"> </p>
+          <form class="section-form note-form" data-section-id="method">
+            <p>
+              <label for="method-content-input">内容</label>
+              <textarea id="method-content-input" class="section-content-input" rows="12" required></textarea>
+            </p>
+            <div class="note-form-actions">
+              <button type="submit">保存内容</button>
+              <button type="button" class="secondary-button cancel-section-edit" data-section-id="method">取消修改</button>
+              <span class="note-form-message section-form-message"></span>
+            </div>
+          </form>
+        </div>
       </section>
 
       <section id="contact" class="section">
