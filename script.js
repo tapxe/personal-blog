@@ -1,7 +1,7 @@
 const defaultArticles = [
   {
     tag: "阶段总结",
-    date: "2026-03-26",
+    date: "2026-03-12",
     title: "根据最新简历回看，我这阶段的爬虫工作主要在做什么",
     excerpt: "把最近这段时间做过的事情重新梳理后，我发现自己的重心已经不只是“写爬虫”，而是围绕采集链路做完整闭环。",
     content: `
@@ -18,7 +18,7 @@ const defaultArticles = [
   },
   {
     tag: "项目笔记",
-    date: "2026-03-25",
+    date: "2026-02-18",
     title: "房产站点采集里，我是怎么区分页面抓取和接口抓取的",
     excerpt: "不是每个站点都适合一套方案，很多时候先判断数据真正来自哪里，比后面写代码更重要。",
     content: `
@@ -34,7 +34,7 @@ const defaultArticles = [
   },
   {
     tag: "Playwright",
-    date: "2026-03-24",
+    date: "2025-12-22",
     title: "什么时候我会从 Selenium 换到 Playwright",
     excerpt: "新简历里补进了 Playwright，这个工具对我来说不是替代一切，而是在特定场景下更顺手。",
     content: `
@@ -49,7 +49,7 @@ const defaultArticles = [
   },
   {
     tag: "反爬处理",
-    date: "2026-03-23",
+    date: "2025-11-09",
     title: "请求头、Cookie、代理、重试、限速，这些策略在项目里到底怎么配合",
     excerpt: "反爬不是只靠代理池，很多问题是多个细节叠加出来的，排查时也不能只盯一个点。",
     content: `
@@ -66,7 +66,7 @@ const defaultArticles = [
   },
   {
     tag: "数据处理",
-    date: "2026-03-22",
+    date: "2025-09-28",
     title: "抓到数据只是开始，字段标准化、分类归并和去重更花时间",
     excerpt: "很多人会把重点放在“抓下来”，但在业务里更难的是把数据处理成能直接使用的样子。",
     content: `
@@ -82,7 +82,7 @@ const defaultArticles = [
   },
   {
     tag: "问题记录",
-    date: "2026-03-21",
+    date: "2025-08-06",
     title: "接口明明有返回，代码却抓不到时，我会怎么排查",
     excerpt: "这种情况我现在基本都会先回到抓包和请求对比，而不是一上来就怀疑框架或者代码语法。",
     content: `
