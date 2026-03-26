@@ -68,6 +68,7 @@ const defaultArticles = [
 ];
 
 const storageKey = "crawler_blog_custom_articles";
+const overrideStorageKey = "crawler_blog_article_overrides";
 const articleGrid = document.getElementById("article-grid");
 const articleCount = document.getElementById("article-count");
 const modal = document.getElementById("article-modal");
@@ -80,6 +81,9 @@ const noteEditor = document.getElementById("note-editor");
 const noteForm = document.getElementById("note-form");
 const noteFormMessage = document.getElementById("note-form-message");
 const noteDateInput = document.getElementById("note-date");
+const cancelEditButton = document.getElementById("cancel-edit-button");
+
+let editingArticleId = null;
 
 function escapeHtml(text) {
   return text
@@ -110,8 +114,39 @@ function saveCustomArticles(articles) {
   localStorage.setItem(storageKey, JSON.stringify(articles));
 }
 
+function loadOverrides() {
+  try {
+    const stored = localStorage.getItem(overrideStorageKey);
+    return stored ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveOverrides(overrides) {
+  localStorage.setItem(overrideStorageKey, JSON.stringify(overrides));
+}
+
 function getArticles() {
-  return [...loadCustomArticles(), ...defaultArticles];
+  const overrides = loadOverrides();
+  const customArticles = loadCustomArticles().map((article, index) => ({
+    ...article,
+    id: article.id || `custom-${index}`
+  }));
+  const mergedCustomArticles = customArticles.map((article) => ({
+    ...article,
+    ...(overrides[article.id] || {})
+  }));
+  const mergedDefaultArticles = defaultArticles.map((article, index) => {
+    const id = `default-${index}`;
+    return {
+      ...article,
+      id,
+      ...(overrides[id] || {})
+    };
+  });
+
+  return [...mergedCustomArticles, ...mergedDefaultArticles];
 }
 
 function updateArticleCount(count) {
@@ -131,7 +166,10 @@ function renderArticles() {
             </div>
             <h3>${article.title}</h3>
             <p class="article-excerpt">${article.excerpt}</p>
-            <button type="button">阅读全文</button>
+            <div class="article-actions">
+              <button type="button" class="article-read-button">阅读全文</button>
+              <button type="button" class="article-edit-button" data-edit-id="${article.id}">修改内容</button>
+            </div>
           </div>
         </article>
       `
@@ -175,18 +213,61 @@ function handleNoteSubmit(event) {
     return;
   }
 
-  const customArticles = loadCustomArticles();
-  customArticles.unshift({
-    tag,
-    date,
-    title,
-    excerpt,
-    content: formatContent(contentText)
-  });
-  saveCustomArticles(customArticles);
+  if (editingArticleId) {
+    const articles = getArticles();
+    const currentArticle = articles.find((article) => article.id === editingArticleId);
+    if (!currentArticle) {
+      noteFormMessage.textContent = "没有找到要修改的笔记。";
+      return;
+    }
+
+    if (editingArticleId.startsWith("custom-")) {
+      const customArticles = loadCustomArticles();
+      const articleIndex = customArticles.findIndex((article) => article.id === editingArticleId);
+      if (articleIndex >= 0) {
+        customArticles[articleIndex] = {
+          ...customArticles[articleIndex],
+          title,
+          tag,
+          date,
+          excerpt,
+          content: formatContent(contentText)
+        };
+        saveCustomArticles(customArticles);
+      }
+    } else {
+      const overrides = loadOverrides();
+      overrides[editingArticleId] = {
+        title,
+        tag,
+        date,
+        excerpt,
+        content: formatContent(contentText)
+      };
+      saveOverrides(overrides);
+    }
+
+    noteFormMessage.textContent = "笔记内容已修改。";
+  } else {
+    const customArticles = loadCustomArticles();
+    customArticles.unshift({
+      id: `custom-${Date.now()}`,
+      tag,
+      date,
+      title,
+      excerpt,
+      content: formatContent(contentText)
+    });
+    saveCustomArticles(customArticles);
+    noteFormMessage.textContent = "笔记已保存到当前浏览器。";
+  }
+
   noteForm.reset();
   noteDateInput.value = new Date().toISOString().slice(0, 10);
-  noteFormMessage.textContent = "笔记已保存到当前浏览器。";
+  editingArticleId = null;
+  cancelEditButton.classList.add("is-hidden");
+  toggleNoteFormButton.textContent = "添加笔记";
+  noteEditor.classList.add("is-hidden");
   renderArticles();
 }
 
@@ -199,13 +280,57 @@ function toggleNoteForm() {
   }
 }
 
+function openEditorForArticle(articleId) {
+  const articles = getArticles();
+  const article = articles.find((item) => item.id === articleId);
+  if (!article) {
+    return;
+  }
+
+  editingArticleId = articleId;
+  noteEditor.classList.remove("is-hidden");
+  toggleNoteFormButton.textContent = "收起表单";
+  cancelEditButton.classList.remove("is-hidden");
+  noteFormMessage.textContent = "正在修改这篇笔记。";
+  document.getElementById("note-title").value = article.title;
+  document.getElementById("note-tag").value = article.tag;
+  document.getElementById("note-date").value = article.date;
+  document.getElementById("note-excerpt").value = article.excerpt;
+  document.getElementById("note-content").value = article.content
+    .replace(/<p>/g, "")
+    .replace(/<\/p>/g, "\n\n")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .trim();
+  document.getElementById("note-title").focus();
+}
+
+function cancelEdit() {
+  editingArticleId = null;
+  noteForm.reset();
+  noteDateInput.value = new Date().toISOString().slice(0, 10);
+  noteFormMessage.textContent = "";
+  cancelEditButton.classList.add("is-hidden");
+  noteEditor.classList.add("is-hidden");
+  toggleNoteFormButton.textContent = "添加笔记";
+}
+
 noteDateInput.value = new Date().toISOString().slice(0, 10);
 renderArticles();
 
 toggleNoteFormButton.addEventListener("click", toggleNoteForm);
 noteForm.addEventListener("submit", handleNoteSubmit);
+cancelEditButton.addEventListener("click", cancelEdit);
 
 articleGrid.addEventListener("click", (event) => {
+  const editButton = event.target.closest(".article-edit-button");
+  if (editButton) {
+    event.stopPropagation();
+    openEditorForArticle(editButton.dataset.editId);
+    return;
+  }
+
   const card = event.target.closest(".article-card");
   if (!card) {
     return;

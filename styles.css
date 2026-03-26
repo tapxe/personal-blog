@@ -172,6 +172,20 @@ ol {
   font: inherit;
 }
 
+.secondary-button {
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text);
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.secondary-button.is-hidden {
+  display: none;
+}
+
 .note-form-message {
   color: var(--muted);
   font-size: 14px;
@@ -239,6 +253,12 @@ ol {
   color: var(--link);
   cursor: pointer;
   font: inherit;
+}
+
+.article-actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
 }
 
 .article-modal {
