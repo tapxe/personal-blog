@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>谭清梓 | 技术学习博客</title>
+  <meta
+    name="description"
+    content="谭清梓的技术学习博客，记录 Python 爬虫、Playwright、JS 逆向、抓包分析和项目实践中的问题总结。"
+  >
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <h1>谭清梓的技术学习博客</h1>
+      <p class="site-intro">记录 Python 爬虫、Playwright、JS 逆向、抓包分析和项目实践中的问题总结。</p>
+      <nav class="site-nav">
+        <a href="#about">关于</a>
+        <a href="#articles">笔记</a>
+        <a href="#experience">经历</a>
+        <a href="#contact">联系</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="about" class="section">
+        <h2>关于我</h2>
+        <p>我是谭清梓，本科毕业于嘉应学院计算机科学与技术专业，目前从事爬虫工程相关工作，主要围绕房产站点数据采集、反爬处理、数据清洗和入库展开。</p>
+        <p>这版博客内容根据我最新的简历整理，重点放在实际项目里做过的事情，包括站点结构分析、页面和接口抓取、动态渲染处理、去重分类、字段标准化，以及任务稳定性优化。</p>
+        <p>除了业务采集，我也会继续记录自己在 JS 逆向、APP 抓包分析、Playwright 异步渲染、代理和限速策略上的学习过程，把遇到的问题和排查过程写成笔记。</p>
+
+        <h3>目前主要关注</h3>
+        <ul>
+          <li>Python、Scrapy、Requests、Selenium、Playwright</li>
+          <li>XPath、CSS Selector、正则表达式、JSON 解析</li>
+          <li>JS 逆向、APP 抓包、签名参数和 Cookie / Token 校验排查</li>
+          <li>MySQL、MongoDB、Redis、字段标准化、分类归并和去重</li>
+          <li>日志监控、异常告警、重试、限速和代理调度</li>
+        </ul>
+      </section>
+
+      <section id="articles" class="section">
+        <h2>学习笔记和问题记录</h2>
+        <p class="section-intro">下面这些内容主要根据我最新简历里的项目经历和技能点整理，既有阶段总结，也有平时实际遇到的问题记录。</p>
+
+        <button type="button" id="toggle-note-form" class="toggle-note-button">添加笔记</button>
+
+        <div class="note-editor is-hidden" id="note-editor">
+          <h3>添加笔记</h3>
+          <form id="note-form" class="note-form">
+            <p>
+              <label for="note-title">标题</label>
+              <input id="note-title" name="title" type="text" required>
+            </p>
+            <p>
+              <label for="note-tag">标签</label>
+              <input id="note-tag" name="tag" type="text" placeholder="例如：问题记录" required>
+            </p>
+            <p>
+              <label for="note-date">发布日期</label>
+              <input id="note-date" name="date" type="date" required>
+            </p>
+            <p>
+              <label for="note-excerpt">摘要</label>
+              <textarea id="note-excerpt" name="excerpt" rows="3" required></textarea>
+            </p>
+            <p>
+              <label for="note-content">正文</label>
+              <textarea id="note-content" name="content" rows="8" placeholder="每段之间空一行即可" required></textarea>
+            </p>
+            <div class="note-form-actions">
+              <button type="submit">保存笔记</button>
+              <span id="note-form-message" class="note-form-message"></span>
+            </div>
+          </form>
+        </div>
+
+        <div class="article-toolbar">
+          <span>最新笔记</span>
+          <span id="article-count">共 0 篇</span>
+        </div>
+        <div class="article-grid" id="article-grid"></div>
+      </section>
+
+      <section id="experience" class="section">
+        <h2>学习和经历</h2>
+        <ul class="timeline">
+          <li>
+            <strong>2025.03 - 至今</strong><br>
+            在广州房置尊网络科技有限公司从事爬虫工程相关工作，围绕多源房产站点采集、站点结构分析、采集规则编写、数据清洗、分类去重和入库形成完整流程。
+          </li>
+          <li>
+            <strong>项目实践</strong><br>
+            在实际任务中使用 Python + Scrapy 处理页面抓取和接口抓取，针对动态渲染页面引入 Selenium / Playwright 辅助渲染，并持续优化请求头、Cookie、代理、重试和限速策略，项目运行期间平均每分钟稳定抓取房源 100+ 条。
+          </li>
+          <li>
+            <strong>2021.09 - 2025.06</strong><br>
+            就读于嘉应学院计算机科学与技术专业，系统学习数据结构、操作系统、计算机网络等基础课程。
+          </li>
+          <li>
+            <strong>毕业设计</strong><br>
+            完成“基于 AI 音乐作曲助手设计与实现”，使用 PyQt5、hmmlearn、mido、pypianoroll、matplotlib、pygame 等工具实现桌面端界面、旋律生成、可视化展示和播放。
+          </li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>平时怎么整理问题</h2>
+        <ol class="study-list">
+          <li>先通过 Charles、Wireshark 或浏览器工具确认真实请求链路和数据来源。</li>
+          <li>再判断是页面结构变化、接口参数问题、Cookie / Token 失效，还是动态渲染和签名逻辑导致失败。</li>
+          <li>把请求、代码、日志和排查结果对应起来，避免只盯着单点现象。</li>
+          <li>最后把解决方法整理成笔记，方便以后复用和继续补充。</li>
+        </ol>
+      </section>
+
+      <section id="contact" class="section">
+        <h2>联系我</h2>
+        <p>如果你也在做爬虫、逆向或者数据采集工程相关方向，欢迎交流。</p>
+        <p>邮箱：<a href="mailto:553063449@qq.com">553063449@qq.com</a></p>
+        <p>电话：<a href="tel:+8615975910747">15975910747</a></p>
+        <p>现居：广州海珠</p>
+      </section>
+    </main>
+  </div>
+
+  <div class="article-modal" id="article-modal" aria-hidden="true">
+    <div class="article-modal-backdrop" data-close="true"></div>
+    <article class="article-modal-card">
+      <button class="modal-close" id="modal-close" aria-label="关闭">×</button>
+      <p class="modal-tag" id="modal-tag"></p>
+      <h3 id="modal-title"></h3>
+      <div class="modal-content" id="modal-content"></div>
+    </article>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
